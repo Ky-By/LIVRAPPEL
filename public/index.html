@@ -30,7 +30,7 @@ const SUPABASE_URL = 'https://xkyuacpdmsmnchbchnsm.supabase.co'
 const SUPABASE_ANON_KEY = 'pk.QoyEgMhYzPwdqBRU6IpTOXBsqYbnPo85r83JIETA4DnUOsrIwMpMj8tCNHoC6rEhATn1hYtYlUkTSQJZBPRxVGJ9mnFtJRoS80b8m49ycZyGkslKbHyYI7zTisayE'
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-document.getElementById('status').innerText = '✅ Prêt - Colle ta clé eyJ... dans le code'
+document.getElementById('status').innerText = '✅ Prêt - Connecté à Supabase!'
 
 document.getElementById('btnCommando').addEventListener('click', async () => {
   const nom = document.getElementById('nom').value
