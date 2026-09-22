@@ -8,10 +8,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-gray-50">
-<div class="max-w-md mx-auto p-6 mt-4">
+<div class="max-w-md mx-auto p-6">
 <h1 class="text-3xl font-black">LIVRAPPEL <span class="text-orange-500">V7.6.5</span></h1>
-<p class="text-sm text-gray-500 mb-6" id="status">Chargement...</p>
-
+<p id="status" class="text-sm text-green-600 my-2">✅ Connecté à Supabase</p>
 <div class="bg-white p-5 rounded-2xl shadow space-y-3">
 <input id="nom" placeholder="Nom client" class="w-full p-3 border rounded-xl">
 <input id="tel_client" placeholder="Tél client" class="w-full p-3 border rounded-xl">
@@ -19,18 +18,15 @@
 <input id="alwa" placeholder="Quartier ex: Akwa" class="w-full p-3 border rounded-xl">
 <input id="montant" placeholder="Montant ex: 2000" type="number" class="w-full p-3 border rounded-xl">
 <input id="tel_livreur" placeholder="Tél livreur" class="w-full p-3 border rounded-xl">
-
-<button id="btnCommando" class="w-full bg-black text-white p-4 rounded-xl font-black mt-2">🚀 ACTIVER COMMANDO</button>
+<button id="btnCommando" class="w-full bg-black text-white p-4 rounded-xl font-black">🚀 ACTIVER COMMANDO</button>
 </div>
 </div>
-
 <script>
-// 👇👇 COLLE TA CLÉ ICI — remplace PASTE_HERE par ton eyJ... de Vercel
 const SUPABASE_URL = 'https://xkyuacpdmsmnchbchnsm.supabase.co'
 const SUPABASE_ANON_KEY = 'pk.QoyEgMhYzPwdqBRU6IpTOXBsqYbnPo85r83JIETA4DnUOsrIwMpMj8tCNHoC6rEhATn1hYtYlUkTSQJZBPRxVGJ9mnFtJRoS80b8m49ycZyGkslKbHyYI7zTisayE'
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+// 👆 Replace this with your FULL pk. key from public/index.html - make sure you copy the WHOLE line until the final '
 
-document.getElementById('status').innerText = '✅ Prêt - Connecté à Supabase!'
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 document.getElementById('btnCommando').addEventListener('click', async () => {
   const nom = document.getElementById('nom').value
@@ -39,47 +35,14 @@ document.getElementById('btnCommando').addEventListener('click', async () => {
   const alwa = document.getElementById('alwa').value
   const montant = document.getElementById('montant').value
   const tel_livreur = document.getElementById('tel_livreur').value
-
-  if(!nom ||!tel_client) {
-    alert('Nom et Tél client obligatoires!')
-    return
-  }
-
+  if(!nom ||!tel_client){ alert('Nom et Tél obligatoires'); return }
   const btn = document.getElementById('btnCommando')
-  btn.innerText = 'Activation...'
-  btn.disabled = true
-
-  try {
-    const { data, error } = await supabaseClient
-     .from('commandes')
-     .insert([{
-        nom_client: nom,
-        tel_client: tel_client,
-        ville: adresse,
-        quartier: alwa,
-        montant: parseInt(montant) || 0,
-        tel_livreur: tel_livreur,
-        status: 'en_cours',
-        created_at: new Date().toISOString()
-      }])
-     .select()
-
+  btn.innerText='Activation...'; btn.disabled=true
+  try{
+    const {data,error} = await supabaseClient.from('commandes').insert([{nom_client:nom,tel_client:tel_client,ville:adresse,quartier:alwa,montant:parseInt(montant)||0,tel_livreur:tel_livreur,status:'en_cours'}]).select()
     if(error) throw error
-
-    alert('✅ COMMANDO ACTIVÉ! ID: ' + data[0].id)
-    document.getElementById('status').innerText = '✅ Dernière commande: ' + nom
-
-    // vide les champs
-    document.getElementById('nom').value = ''
-    document.getElementById('tel_client').value = ''
-
-  } catch(err) {
-    alert('❌ Erreur: ' + err.message + '\n\nAs-tu collé ta clé eyJ...?')
-    console.error(err)
-  } finally {
-    btn.innerText = '🚀 ACTIVER COMMANDO'
-    btn.disabled = false
-  }
+    alert('✅ COMMANDO ACTIVÉ! ID:'+data[0].id)
+  }catch(e){ alert('❌ '+e.message) }finally{ btn.innerText='🚀 ACTIVER COMMANDO'; btn.disabled=false }
 })
 </script>
 </body>
